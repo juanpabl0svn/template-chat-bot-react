@@ -1,0 +1,40 @@
+*{
+  margin: 0;
+  padding: 0;
+  --length: 200px;
+}
+
+main {
+  width: 100%;
+  min-height: 100vh;
+  background: #b95959;
+  display: grid;
+  place-content: center;
+}
+
+.chat{
+  background: #fff;
+  height: 200px;
+  width: 100%;
+}
+
+.card{
+  width: 200px;
+}
+
+.title{
+  background: green;
+  width: 100%;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+textarea{
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-top: 1px solid gray  ;
+  resize: none  ;
+}
