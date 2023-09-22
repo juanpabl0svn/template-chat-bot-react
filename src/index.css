@@ -12,17 +12,21 @@ main {
   place-content: center;
 }
 
-.chat {
+/* .chat {
   background: #fff;
   height: 200px;
   width: 100%;
+  max-width: 200px;
   overflow-y: scroll;
-}
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+} */
 
 .card {
   width: 200px;
 }
-
 .title {
   background: green;
   width: 100%;
@@ -35,19 +39,98 @@ main {
 
 textarea {
   border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
   width: calc(100% - 20px);
   height: 20px;
   outline: none;
   border: none;
   border-top: 1px solid gray;
   resize: none;
-  padding: 5px 10px;
+  padding: 10px 10px;
   font-size: 1rem;
 }
 
-input[type="text"] {
+.send {
+  display: flex;
+  position: relative;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 200px;
+  overflow-y: scroll;
+  background: white;
+}
+
+p.from,
+p.to {
+  max-width: 70%;
   word-wrap: break-word;
-  word-break: break-all;
-  height: 80px;
+  border: 1px solid black;
+}
+
+p.from {
+  background-color: #4caf50;
+  color: white;
+  align-self: flex-end;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 4px;
+}
+
+p.to {
+  background-color: #f1f1f1;
+  color: black;
+  align-self: flex-start;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 4px;
+}
+
+*::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+*::-webkit-scrollbar:vertical {
+  width:10px;
+}
+
+*::-webkit-scrollbar-button:increment,*::-webkit-scrollbar-button {
+  display: none;
+} 
+
+*::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #797979;
+  border-radius: 20px;
+  border: 2px solid #f1f2f3;
+}
+
+*::-webkit-scrollbar-track {
+  border-radius: 10px;  
+}
+
+.new-message {
+  animation: slideIn 0.5s ease; /* Utiliza la animación 'slideIn' durante 0.5 segundos */
+}
+
+
+.menu{
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

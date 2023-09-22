@@ -8,9 +8,7 @@ function App() {
   
   function handleClick(){
     const element = document.getElementById('chat');
-
     element.classList.toggle('show')
-
   }
 
   return (
