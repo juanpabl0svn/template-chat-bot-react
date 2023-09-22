@@ -6,30 +6,38 @@ const Chat = () => {
   const [messages, setMessages] = useState(null);
 
   const newMessage = useRef();
+  
+  console.log('a ver')
 
   useEffect(() => {
     setMessages(["hola", "ammigos", "bien", "o que"]);
+    window.addEventListener('keydown',(e)=>{
+      if (e.key === 'Enter') handleSubmit(e)
+    })
   }, []);
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const value = newMessage.current.value
+    console.log(value)
+    let array  = value.split(' ').filter(el => el !== '').join(' ')
+    if (!array) return
+    setMessages((lastMessages) => [...lastMessages, value])
+  };
+  
   return (
-    <div className="card">
+    <article className="card">
       <p className="title">Tu amigo</p>
-      <div className="chat">
+      <section className="chat">
         {messages != null &&
           messages.map((message) => <Message key={uuid()} message={message} />)}
-      </div>
-      <textarea type="text" ref={newMessage} />
-      <button
-        onClick={() =>
-          setMessages((lastMessages) => [
-            ...lastMessages,
-            newMessage.current.value,
-          ])
-        }
-      >
-        enviar
-      </button>
-    </div>
+      </section>
+
+      <form className="send" onSubmit={handleSubmit}>
+        <textarea type="text" ref={newMessage} />
+        <button>Enviar</button>
+      </form>
+    </article>
   );
 };
 export default Chat;
