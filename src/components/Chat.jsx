@@ -3,35 +3,51 @@ import Message from "./Message";
 import uuid from "react-uuid";
 import Menu from "./Menu";
 
+function controlMessages() {
+  const chat = document.getElementById("chat");
+  if (!chat) return;
+  chat.scrollTop = chat.scrollHeight;
+  const chatLastChild = chat.lastChild;
+  if (!chatLastChild) return;
+  chatLastChild.classList.add("new-message");
+  setTimeout(() => {
+    chatLastChild.classList.remove("new-message");
+  }, 1000);
+}
+
+function checkQuestion(messages, setAnswer) {
+  if (
+    messages !== undefined &&
+    messages[messages.length - 1]?.type === "from"
+  ) {
+    const value = messages[messages.length - 1].text;
+
+    if (value.includes("contraseña")) {
+      const answer = {
+        type: "to",
+        text: "¿Deseas cambiar la contraseña?",
+      };
+      setAnswer((lastValue) => [...lastValue, answer]);
+      return;
+    }
+  }
+}
+
 const Chat = () => {
   const [messages, setMessages] = useState([]);
 
   const newMessage = useRef();
 
-  // useEffect(() => {
-  //   setMessages([
-  //     { type: "to", text: "Hola" },
-  //   ]);
-  // }, []);
-
   useEffect(() => {
-    const chat = document.getElementById("chat");
-    if (!chat) return;
-    chat.scrollTop = chat.scrollHeight;
-
-    const chatLastChild = chat.lastChild;
-    if (!chatLastChild) return;
-    chatLastChild.classList.add("new-message");
-    setTimeout(() => {
-      chatLastChild.classList.remove("new-message");
-    }, 1000);
+    controlMessages();
+    checkQuestion(messages, setMessages);
   }, [messages]);
 
   const handleSubmit = () => {
     const value = newMessage.current.value;
     const array = value
       .split(" ")
-      .filter((el) => el !== "")
+      .filter((word) => word !== "")
       .join(" ");
     if (!array) return;
 
@@ -47,7 +63,7 @@ const Chat = () => {
     <article className="card">
       <p className="title">Tu amigo</p>
       <section className="chat" id="chat">
-        <Menu/>
+        <Menu />
         {messages != null &&
           messages.map((message) => <Message key={uuid()} message={message} />)}
       </section>
