@@ -2,6 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import Message from "./Message";
 import uuid from "react-uuid";
 import Menu from "./Menu";
+import getEntryValue from "../utils/functions";
+
+const PROCESS = {
+  change_password: '¿Quieres cambiar tu contraseña?',
+  make_pqr : '¿Quieres hacer una PQR para presentar tu problema?'
+};
+
 
 function controlMessages() {
   const chat = document.getElementById("chat");
@@ -15,32 +22,38 @@ function controlMessages() {
   }, 1000);
 }
 
-function checkQuestion(messages, setAnswer) {
-  if (
-    messages !== undefined &&
-    messages[messages.length - 1]?.type === "from"
-  ) {
-    const value = messages[messages.length - 1].text;
+async function checkQuestion(message, setAnswer) {
+  const value = await getEntryValue(message);
 
-    if (value.includes("contraseña")) {
-      const answer = {
-        type: "to",
-        text: "¿Deseas cambiar la contraseña?",
-      };
-      setAnswer((lastValue) => [...lastValue, answer]);
-      return;
-    }
-  }
+  const response =
+    PROCESS[value] ??
+    "Lo siento, no entendi tu pregunta, ¿Puedes ser mas claro y directo para yo entender mejor por favor?";
+
+
+  const messageObject = {
+    type: "bot",
+    text: response,
+  };
+
+  return setAnswer((lastMessages) => [...lastMessages, messageObject]);
 }
+
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
-
   const newMessage = useRef();
 
   useEffect(() => {
     controlMessages();
-    checkQuestion(messages, setMessages);
+    if (
+      messages !== undefined &&
+      messages[messages.length - 1]?.type === "user"
+    ) {
+      const lastMessage = messages[messages.length - 1].text;
+      checkQuestion(lastMessage, setMessages);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
   const handleSubmit = () => {
@@ -52,7 +65,7 @@ const Chat = () => {
     if (!array) return;
 
     const messageObject = {
-      type: "from",
+      type: "user",
       text: value,
     };
     setMessages((lastMessages) => [...lastMessages, messageObject]);
