@@ -5,10 +5,9 @@ import Menu from "./Menu";
 import getEntryValue from "../utils/functions";
 
 const PROCESS = {
-  change_password: '¿Quieres cambiar tu contraseña?',
-  make_pqr : '¿Quieres hacer una PQR para presentar tu problema?'
+  change_password: "¿Quieres cambiar tu contraseña?",
+  make_pqr: "¿Quieres hacer una PQR para presentar tu problema?",
 };
-
 
 function controlMessages() {
   const chat = document.getElementById("chat");
@@ -22,13 +21,13 @@ function controlMessages() {
   }, 1000);
 }
 
-async function checkQuestion(message, setAnswer) {
+async function checkQuestion(message, setAnswer, setProcess) {
   const value = await getEntryValue(message);
 
   const response =
-    PROCESS[value] ??
-    "Lo siento, no entendi tu pregunta, ¿Puedes ser mas claro y directo para yo entender mejor por favor?";
+    PROCESS[value]
 
+  setProcess(response);
 
   const messageObject = {
     type: "bot",
@@ -38,19 +37,21 @@ async function checkQuestion(message, setAnswer) {
   return setAnswer((lastMessages) => [...lastMessages, messageObject]);
 }
 
-
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const newMessage = useRef();
 
+  const [process, setProcess] = useState(undefined);
+
   useEffect(() => {
     controlMessages();
-    if (
-      messages !== undefined &&
-      messages[messages.length - 1]?.type === "user"
-    ) {
-      const lastMessage = messages[messages.length - 1].text;
-      checkQuestion(lastMessage, setMessages);
+    const lastMessage = messages[messages.length - 1];
+    if (messages.length == 0 || lastMessage?.type !== "user") return () => {};
+    if (process != undefined && lastMessage?.type === "user") {
+      alert("Seguroooo?");
+      setProcess(undefined);
+    } else {
+      checkQuestion(lastMessage?.text, setMessages, setProcess);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,7 +74,7 @@ const Chat = () => {
   };
 
   return (
-    <article className="card">
+    <article className="card" id="card">
       <p className="title">Tu amigo</p>
       <section className="chat" id="chat">
         <Menu />

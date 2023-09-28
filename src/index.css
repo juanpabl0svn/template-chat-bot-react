@@ -14,8 +14,14 @@ main {
 }
 
 .card {
+  position: fixed;
+  bottom: .7rem;
+  right: -13rem;
   width: 200px;
+  transition: all 400ms ease-in-out;
 }
+
+
 .title {
   background: green;
   width: 100%;
@@ -122,4 +128,15 @@ p.bot {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.icon{
+  position: fixed;
+  bottom: 10px;
+  right: 20px;
+}
+
+.show{
+  transform: translateX(-107%);
+  transition: all 400ms ease-in-out;
 }

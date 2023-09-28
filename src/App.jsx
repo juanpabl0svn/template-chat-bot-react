@@ -1,20 +1,22 @@
 // import { useState } from "react";
 import "./index.css";
-import Chat from './components/Chat';
+
 import InfoIcon from "./components/InfoIcon";
 
-function App() {
+import Chat from "./components/chat";
 
-  
-  function handleClick(){
-    const element = document.getElementById('chat');
-    element.classList.toggle('show')
+function App() {
+  function handleClick(e) {
+    e.preventDefault()
+    const element = document.getElementById("card");
+    if (!element.classList) return;
+    element.classList.toggle("show");
   }
 
   return (
     <main>
-        <InfoIcon click={handleClick}/>
-        <Chat/>
+      <InfoIcon click={handleClick} />
+      <Chat />
     </main>
   );
 }
