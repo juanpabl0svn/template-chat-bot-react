@@ -3,6 +3,8 @@ import Message from "./Message";
 import uuid from "react-uuid";
 import Menu from "./Menu";
 import getEntryValue from "../utils/functions";
+import SendIcon from "./SendIcon";
+import ExitIcon from "./ExitIcon";
 
 const PROCESS = {
   change_password: "¿Quieres cambiar tu contraseña?",
@@ -24,8 +26,7 @@ function controlMessages() {
 async function checkQuestion(message, setAnswer, setProcess) {
   const value = await getEntryValue(message);
 
-  const response =
-    PROCESS[value]
+  const response = PROCESS[value];
 
   setProcess(response);
 
@@ -73,9 +74,16 @@ const Chat = () => {
     newMessage.current.value = "";
   };
 
+  const handleExit = () => {
+    const element = document.getElementById("card");
+    if (!element.classList) return;
+    element.classList.remove('show')
+  };
+
   return (
     <article className="card" id="card">
       <p className="title">Tu amigo</p>
+      <ExitIcon click={handleExit} />
       <section className="chat" id="chat">
         <Menu />
         {messages != null &&
@@ -92,7 +100,7 @@ const Chat = () => {
             }
           }}
         ></textarea>
-        <button onClick={handleSubmit}>Enviar</button>
+        <SendIcon click={handleSubmit} />
       </section>
     </article>
   );

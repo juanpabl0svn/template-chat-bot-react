@@ -6,11 +6,10 @@ import InfoIcon from "./components/InfoIcon";
 import Chat from "./components/chat";
 
 function App() {
-  function handleClick(e) {
-    e.preventDefault()
+  function handleClick() {
     const element = document.getElementById("card");
     if (!element.classList) return;
-    element.classList.toggle("show");
+    element.classList.add("show");
   }
 
   return (

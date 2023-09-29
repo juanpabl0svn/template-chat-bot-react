@@ -4,7 +4,7 @@ const InfoIcon = ({click}) => {
     <svg
     onClick={click}
       xmlns="http://www.w3.org/2000/svg"
-      className="icon icon-tabler icon-tabler-help-hexagon-filled"
+      className="icon icon-tabler icon-tabler-help-hexagon-filled icon-chat-bot"
       width="44"
       height="44"
       viewBox="0 0 24 24"
