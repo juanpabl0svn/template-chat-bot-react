@@ -11,6 +11,14 @@ const PROCESS = {
   make_pqr: "¿Quieres hacer una PQR para presentar tu problema?",
 };
 
+function makeAPQR() {
+  alert("Se hizo una pqr");
+}
+
+const HANDLE_PROCESS = {
+  make_pqr: makeAPQR,
+};
+
 function controlMessages() {
   const chat = document.getElementById("chat");
   if (!chat) return;
@@ -23,37 +31,56 @@ function controlMessages() {
   }, 1000);
 }
 
-async function checkQuestion(message, setAnswer, setProcess) {
+async function checkQuestion(message, setAnswer, currentProcess, setCurrentProcess,isAnswering,setIsAnswering) {
+  const messageObject = {
+    type: "bot",
+    text: '',
+  };
+
+  if (isAnswering){
+    HANDLE_PROCESS[currentProcess](message)
+    setIsAnswering(false)
+    setCurrentProcess(undefined);
+    messageObject.text = 'Trabajo realizado correctamente'
+    return setAnswer((lastMessages) => [...lastMessages, messageObject]);
+  }
+
   const value = await getEntryValue(message);
 
   const response = PROCESS[value];
 
-  setProcess(response);
+  messageObject.text = response
 
-  const messageObject = {
-    type: "bot",
-    text: response,
-  };
+  if (currentProcess) {
+    if (response == "accepted") {
+      messageObject.text = "Ingresa tu pqr por favor";
+      setIsAnswering(true)
+    } else {
+      messageObject.text = "Entonces cuentame como puedo ayudarte";
+    }
+    setCurrentProcess(undefined);
+    return setAnswer((lastMessages) => [...lastMessages, messageObject]);
+  }
+
+  setCurrentProcess(response);
 
   return setAnswer((lastMessages) => [...lastMessages, messageObject]);
 }
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
+
   const newMessage = useRef();
 
-  const [process, setProcess] = useState(undefined);
+  const [currentProcess, setCurrentProcess] = useState(undefined);
+
+  const [isAnswering, setIsAnswering] = useState(false);
 
   useEffect(() => {
     controlMessages();
     const lastMessage = messages[messages.length - 1];
     if (messages.length == 0 || lastMessage?.type !== "user") return () => {};
-    if (process != undefined && lastMessage?.type === "user") {
-      alert("Seguroooo?");
-      setProcess(undefined);
-    } else {
-      checkQuestion(lastMessage?.text, setMessages, setProcess);
-    }
+    checkQuestion(lastMessage?.text, setMessages, currentProcess, setCurrentProcess,isAnswering,setIsAnswering);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
@@ -77,7 +104,7 @@ const Chat = () => {
   const handleExit = () => {
     const element = document.getElementById("card");
     if (!element.classList) return;
-    element.classList.remove('show')
+    element.classList.remove("show");
   };
 
   return (
