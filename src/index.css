@@ -2,6 +2,8 @@
   margin: 0;
   padding: 0;
   --length: 200px;
+  --orange: #fb8407;
+  --blue:#112ea2;
   scroll-behavior: smooth;
 }
 
@@ -23,7 +25,7 @@ main {
 
 
 .title {
-  background: green;
+  background: var(--orange);
   width: 100%;
   padding: 8px 0;
   border-top-left-radius: 5px;
@@ -67,10 +69,11 @@ p.bot {
   max-width: 70%;
   word-wrap: break-word;
   border: 1px solid black;
+  background: #000;
 }
 
 p.user {
-  background-color: #4caf50;
+  background-color: var(--blue);
   color: white;
   align-self: flex-end;
   border-radius: 8px;
