@@ -5,18 +5,21 @@ import Menu from "./Menu";
 import getEntryValue from "../utils/functions";
 import SendIcon from "./SendIcon";
 import ExitIcon from "./ExitIcon";
+import useMessage from "../hooks/useMessage";
 
 const PROCESS = {
-  change_password: "¿Quieres cambiar tu contraseña?",
-  make_pqr: "¿Quieres hacer una PQR para presentar tu problema?",
+  password: ["¿Quieres cambiar tu contraseña?", "Ingresa tu nueva contraseña"],
+  pqr: ["¿Quieres hacer una PQR para presentar tu problema?", "Ingresa la pqr"],
+  tournament: ["Hacer torneo", "Empezar torneo"],
+  no_sense: ["No entiendo"],
 };
 
-function makeAPQR() {
-  alert("Se hizo una pqr");
+function makeAPQR(message) {
+  alert(message);
 }
 
 const HANDLE_PROCESS = {
-  make_pqr: makeAPQR,
+  pqr: makeAPQR,
 };
 
 function controlMessages() {
@@ -31,38 +34,47 @@ function controlMessages() {
   }, 1000);
 }
 
-async function checkQuestion(message, setAnswer, currentProcess, setCurrentProcess,isAnswering,setIsAnswering) {
+async function checkQuestion(
+  message,
+  setAnswer,
+  currentProcess,
+  setCurrentProcess,
+  isAnswering,
+  setIsAnswering
+) {
   const messageObject = {
     type: "bot",
-    text: '',
+    text: "",
   };
 
-  if (isAnswering){
-    HANDLE_PROCESS[currentProcess](message)
-    setIsAnswering(false)
+  if (isAnswering) {
+    console.log(currentProcess);
+    HANDLE_PROCESS[currentProcess](message);
+    setIsAnswering(false);
     setCurrentProcess(undefined);
-    messageObject.text = 'Trabajo realizado correctamente'
+    messageObject.text = "Hay algo mas en lo que pueda ayudarte?";
     return setAnswer((lastMessages) => [...lastMessages, messageObject]);
   }
 
   const value = await getEntryValue(message);
 
-  const response = PROCESS[value];
+  const response = PROCESS[value] ?? value;
 
-  messageObject.text = response
+  messageObject.text = response[0];
 
   if (currentProcess) {
-    if (response == "accepted") {
-      messageObject.text = "Ingresa tu pqr por favor";
-      setIsAnswering(true)
+    console.log(response);
+    if (response == "yes") {
+      messageObject.text = PROCESS[currentProcess][1];
+      setIsAnswering(true);
     } else {
       messageObject.text = "Entonces cuentame como puedo ayudarte";
+      setCurrentProcess(undefined);
     }
-    setCurrentProcess(undefined);
     return setAnswer((lastMessages) => [...lastMessages, messageObject]);
   }
 
-  setCurrentProcess(response);
+  setCurrentProcess(value);
 
   return setAnswer((lastMessages) => [...lastMessages, messageObject]);
 }
@@ -72,15 +84,21 @@ const Chat = () => {
 
   const newMessage = useRef();
 
-  const [currentProcess, setCurrentProcess] = useState(undefined);
-
-  const [isAnswering, setIsAnswering] = useState(false);
+  const { currentProcess, setCurrentProcess, isAnswering, setIsAnswering } =
+    useMessage();
 
   useEffect(() => {
     controlMessages();
     const lastMessage = messages[messages.length - 1];
     if (messages.length == 0 || lastMessage?.type !== "user") return () => {};
-    checkQuestion(lastMessage?.text, setMessages, currentProcess, setCurrentProcess,isAnswering,setIsAnswering);
+    checkQuestion(
+      lastMessage?.text,
+      setMessages,
+      currentProcess,
+      setCurrentProcess,
+      isAnswering,
+      setIsAnswering
+    );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);

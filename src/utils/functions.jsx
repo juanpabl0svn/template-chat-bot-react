@@ -5,6 +5,7 @@ async function getEntryValue(message) {
       return null
     }
     const res = await req.json();
+    console.log(res)
     return res.response;
   } catch (err) {
     console.error(err);
